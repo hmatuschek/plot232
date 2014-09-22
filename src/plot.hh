@@ -41,6 +41,8 @@ public:
 
   void addValues(const QList<double> &values);
 
+  void reset();
+
   size_t numGraphs() const;
   const Graph &graph(size_t i) const;
   iterator begin();

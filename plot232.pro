@@ -5,13 +5,13 @@ SOURCES = src/main.cc src/plot.cc src/plotview.cc src/application.cc \
     src/ctrlview.cc \
     src/mainwindow.cc
 
-CONFIG += qt release windows
+CONFIG += qt debug
 TARGET = plot232
 
 QT += gui widgets serialport
 
 package.path = $${OUT_PWD}/package
-package.files += plot232.exe plot232.nsi # somelib.dll
+package.files += plot232.exe plot232.nsi
 INSTALLS += package
 
 unset(MANGLED_INSTALLS)

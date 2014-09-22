@@ -30,6 +30,7 @@ public:
   void setStopBits(QSerialPort::StopBits bits);
 
   Plot *plot() const;
+  void resetPlot();
 
 protected slots:
   void onDataReceived();

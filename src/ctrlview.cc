@@ -13,6 +13,7 @@ CtrlView::CtrlView(Application *app, QWidget *parent)
     QSerialPortInfo info = app->portInfo(i);
     _portSelect->addItem(info.portName());
   }
+  _portSelect->setCurrentIndex(-1);
 
   _deviceName = new QLabel("---");
 
@@ -54,6 +55,7 @@ CtrlView::CtrlView(Application *app, QWidget *parent)
   layout->addRow("Baud rate", _rate);
   layout->addRow("Parity", _parity);
   layout->addRow("Stop bits", _stopBits);
+  layout->addRow("Delimiter", _delimiter);
 
   setLayout(layout);
 }
@@ -67,6 +69,7 @@ CtrlView::_onDelimiterChanged(QString del) {
 void
 CtrlView::_onPortSelected(int idx) {
   _application->openPort(idx);
+  _application->resetPlot();
 
   QSerialPortInfo info = QSerialPortInfo::availablePorts().at(idx);
   _deviceName->setText(info.systemLocation());

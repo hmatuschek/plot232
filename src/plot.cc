@@ -20,7 +20,7 @@ Graph::addValue(double t, double y) {
   _values.push_back(QPair<double, double>(t,y));
   // Update min & max Y
   _minY = std::min(_minY, y);
-  _maxY = std::max(_minY, y);
+  _maxY = std::max(_maxY, y);
   _minY = std::floor(_minY/10)*10;
   _maxY = std::ceil(_maxY/10)*10;
 }
@@ -85,6 +85,13 @@ Plot::addValues(const QList<double> &values)
   _tmax = std::ceil(_tmax/10)*10;
 
   // Signal updated graphs
+  emit update();
+}
+
+void
+Plot::reset() {
+  _tmax=0; _timer.invalidate();
+  _graphs.clear();
   emit update();
 }
 
