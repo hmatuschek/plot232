@@ -4,7 +4,7 @@
 #include "plot.hh"
 #include <QApplication>
 #include <QtSerialPort/QSerialPort>
-#include <QtSerialPort/QSerialPortInfo>
+#include <QSerialPortInfo>
 
 class Application : public QApplication
 {

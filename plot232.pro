@@ -5,8 +5,18 @@ SOURCES = src/main.cc src/plot.cc src/plotview.cc src/application.cc \
     src/ctrlview.cc \
     src/mainwindow.cc
 
-CONFIG += debug
+CONFIG += qt release windows
 TARGET = plot232
 
-QT += serialport widgets
- 
+QT += gui widgets serialport
+
+package.path = $${OUT_PWD}/package
+package.files += plot232.exe plot232.nsi # somelib.dll
+INSTALLS += package
+
+unset(MANGLED_INSTALLS)
+for(x, INSTALLS):MANGLED_INSTALLS += install_$${x}
+build_package.path = $${OUT_PWD}/package
+build_package.commands = \"C:/Program Files (x86)/NSIS/makensisw.exe\" \"$${OUT_PWD}/package/plot232.nsi\"
+build_package.depends = $${MANGLED_INSTALLS}
+INSTALLS += build_package

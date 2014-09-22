@@ -42,6 +42,7 @@ section "install"
 	setOutPath $INSTDIR
 	# Files added here should be removed by the uninstaller (see section "uninstall")
 	file "plot232.exe"
+        file "*.dll"
 	# Add any other files for the install directory (license files, app data, etc) here
  
 	# Uninstaller - See function un.onInit and section "uninstall" for configuration
@@ -84,7 +85,7 @@ section "uninstall"
  
 	# Remove files
 	delete $INSTDIR\app.exe
-	delete $INSTDIR\logo.ico
+        #delete $INSTDIR\*.dll
  
 	# Always delete uninstaller as the last action
 	delete $INSTDIR\uninstall.exe
