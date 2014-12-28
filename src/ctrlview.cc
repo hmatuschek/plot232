@@ -1,11 +1,24 @@
 #include "ctrlview.hh"
 #include <QFormLayout>
 #include <QLineEdit>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QFileDialog>
 
 
 CtrlView::CtrlView(Application *app, QWidget *parent)
   : QWidget(parent), _application(app)
 {
+  _startStop = new QPushButton();
+  _startStop->setCheckable(true);
+  if (_application->enabled()) {
+    _startStop->setText("Stop"); _startStop->setChecked(true);
+  } else {
+    _startStop->setText("Start"); _startStop->setChecked(false);
+  }
+
+  QPushButton *save = new QPushButton("Save ...");
+
   _delimiter = new QLineEdit(_application->delimiter());
 
   _portSelect = new QComboBox();
@@ -43,20 +56,28 @@ CtrlView::CtrlView(Application *app, QWidget *parent)
   _stopBits->addItem("2", QSerialPort::TwoStop);
 
   QObject::connect(app, SIGNAL(destroyed()), this, SLOT(deleteLater()));
+  QObject::connect(_startStop, SIGNAL(toggled(bool)), this, SLOT(_onStartStop(bool)));
+  QObject::connect(save, SIGNAL(clicked()), this, SLOT(_onSave()));
   QObject::connect(_delimiter, SIGNAL(textEdited(QString)), this, SLOT(_onDelimiterChanged(QString)));
   QObject::connect(_portSelect, SIGNAL(currentIndexChanged(int)), this, SLOT(_onPortSelected(int)));
   QObject::connect(_rate, SIGNAL(currentIndexChanged(int)), this, SLOT(_onRateSelected(int)));
   QObject::connect(_parity, SIGNAL(currentIndexChanged(int)), this, SLOT(_onParitySelected(int)));
   QObject::connect(_stopBits, SIGNAL(currentIndexChanged(int)), this, SLOT(_onStopBitsSelected(int)));
 
-  QFormLayout *layout = new QFormLayout();
-  layout->addRow("Port", _portSelect);
-  layout->addRow("Device", _deviceName);
-  layout->addRow("Baud rate", _rate);
-  layout->addRow("Parity", _parity);
-  layout->addRow("Stop bits", _stopBits);
-  layout->addRow("Delimiter", _delimiter);
+  QVBoxLayout *layout = new QVBoxLayout();
+  QHBoxLayout *bbox = new QHBoxLayout();
+  bbox->addWidget(_startStop);
+  bbox->addWidget(save);
+  layout->addLayout(bbox);
 
+  QFormLayout *table = new QFormLayout();
+  table->addRow("Port", _portSelect);
+  table->addRow("Device", _deviceName);
+  table->addRow("Baud rate", _rate);
+  table->addRow("Parity", _parity);
+  table->addRow("Stop bits", _stopBits);
+  table->addRow("Delimiter", _delimiter);
+  layout->addLayout(table);
   setLayout(layout);
 }
 
@@ -116,4 +137,18 @@ CtrlView::_onParitySelected(int idx) {
 void
 CtrlView::_onStopBitsSelected(int idx) {
   _application->setStopBits(QSerialPort::StopBits(_parity->itemData(idx).toInt()));
+}
+
+void
+CtrlView::_onStartStop(bool enabled) {
+  _application->enable(enabled);
+  if (enabled) { _startStop->setText("Stop"); }
+  else { _startStop->setText("Start"); }
+}
+
+void
+CtrlView::_onSave() {
+  QString filename = QFileDialog::getSaveFileName(0, "Save as...", "", "*.png");
+  if ( 0 == filename.size()) { return; }
+  emit savePlot(filename);
 }

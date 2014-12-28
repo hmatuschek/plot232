@@ -2,7 +2,7 @@
 #include <iostream>
 
 Application::Application(int argc, char *argv[])
-  : QApplication(argc, argv), _delimiter(";"), _source(), _plot(0)
+  : QApplication(argc, argv), _enabled(true), _delimiter(";"), _source(), _plot(0)
 {
   _plot = new Plot();
   QObject::connect(&_source, SIGNAL(readyRead()), this, SLOT(onDataReceived()));
@@ -58,6 +58,18 @@ Application::setStopBits(QSerialPort::StopBits bits) {
   _source.setStopBits(bits);
 }
 
+bool
+Application::enabled() const {
+  return _enabled;
+}
+
+void
+Application::enable(bool en) {
+  _enabled = en;
+  if (_enabled) { _plot->reset(); }
+}
+
+
 Plot *
 Application::plot() const {
   return _plot;
@@ -88,6 +100,8 @@ Application::onDataReceived() {
     for (; item != csv.end(); item++) {
       values.push_back(item->toDouble());
     }
-    _plot->addValues(values);
+    if (_enabled) {
+      _plot->addValues(values);
+    }
   }
 }

@@ -1,6 +1,8 @@
 #include "plotview.hh"
 #include <QPainter>
 #include <QPaintEvent>
+#include <QImage>
+
 
 PlotView::PlotView(Plot *plot, QWidget *parent) :
   QWidget(parent), _plot(plot)
@@ -24,6 +26,17 @@ PlotView::PlotView(Plot *plot, QWidget *parent) :
 }
 
 
+bool
+PlotView::save(const QString &filename) {
+  QImage img(width(), height(), QImage::Format_ARGB32);
+  img.fill(Qt::transparent);
+  QPainter painter(&img);
+  painter.setRenderHint(QPainter::Antialiasing);
+  _draw(painter);
+  return img.save(filename, "png");
+}
+
+
 void
 PlotView::paintEvent(QPaintEvent *evt) {
   // First, paint widget background
@@ -31,15 +44,17 @@ PlotView::paintEvent(QPaintEvent *evt) {
 
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);
+  painter.fillRect(evt->rect(), Qt::white);
   painter.setClipRect(evt->rect());
   painter.save();
+  _draw(painter);
+  painter.restore();
+}
 
-  painter.fillRect(evt->rect(), Qt::white);
-
+void
+PlotView::_draw(QPainter &painter) {
   _drawGraphs(painter);
   _drawAxes(painter);
-
-  painter.restore();
 }
 
 

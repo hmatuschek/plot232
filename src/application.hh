@@ -29,6 +29,9 @@ public:
   QSerialPort::StopBits stopBits() const;
   void setStopBits(QSerialPort::StopBits bits);
 
+  bool enabled() const;
+  void enable(bool en);
+
   Plot *plot() const;
   void resetPlot();
 
@@ -36,6 +39,7 @@ protected slots:
   void onDataReceived();
 
 protected:
+  bool _enabled;
   QString _delimiter;
   QSerialPort _source;
   Plot *_plot;

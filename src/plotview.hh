@@ -10,8 +10,12 @@ class PlotView : public QWidget
 public:
   explicit PlotView(Plot *plot, QWidget *parent = 0);
 
+public slots:
+  bool save(const QString &filename);
+
 protected:
   void paintEvent(QPaintEvent *evt);
+  void _draw(QPainter &painter);
   void _drawAxes(QPainter &painter);
   void _drawGraphs(QPainter &painter);
   void _drawGraph(const Graph &graph, QPainter &painter);

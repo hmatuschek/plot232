@@ -12,6 +12,8 @@ MainWindow::MainWindow(Application *app, QWidget *parent) :
   splitter->addWidget(_plotView);
   splitter->addWidget(_ctrlView);
   setCentralWidget(splitter);
+
+  QObject::connect(_ctrlView, SIGNAL(savePlot(QString)), _plotView, SLOT(save(QString)));
 }
 
 
