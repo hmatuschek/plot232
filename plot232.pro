@@ -11,7 +11,7 @@ TARGET = plot232
 QT += gui widgets serialport
 
 package.path = $${OUT_PWD}/package
-package.files += plot232.exe plot232.nsi # somelib.dll
+package.files += plot232.exe plot232.nsi
 INSTALLS += package
 
 unset(MANGLED_INSTALLS)

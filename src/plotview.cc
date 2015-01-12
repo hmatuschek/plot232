@@ -44,11 +44,14 @@ PlotView::paintEvent(QPaintEvent *evt) {
 
 
 void
-PlotView::_drawGraphs(QPainter &painter) {
+PlotView::_drawGraphs(QPainter &painter) {  
+  QPen pen = painter.pen();
+  pen.setWidth(2);
+
   Plot::iterator graph = _plot->begin();
   QVector<QColor>::iterator color = _palette.begin();
   for (; graph != _plot->end(); graph++, color++) {
-    painter.setPen(*color);
+    pen.setColor(*color); painter.setPen(pen);
     _drawGraph(*graph, painter);
   }
 }
@@ -57,8 +60,7 @@ void
 PlotView::_drawGraph(const Graph &graph, QPainter &painter) {
   double tscale = width()/_plot->maxT();
   double minY = _plot->minY();
-  double yscale = height()/(_plot->maxY() - minY);
-
+  double yscale = height()/(_plot->maxY() - minY);  
   if (1 < graph.numValues()) {
     int x1 = tscale*graph.time(0);
     int y1 = height()-yscale*(graph.value(0)-minY);
@@ -73,5 +75,39 @@ PlotView::_drawGraph(const Graph &graph, QPainter &painter) {
 
 void
 PlotView::_drawAxes(QPainter &painter) {
-  // pass...
+  int32_t height = this->size().height();
+  int32_t width = this->size().width();
+
+  QPen pen(Qt::black);
+  pen.setWidth(1); pen.setCosmetic(true);
+  painter.setPen(pen);
+
+  QFont font; font.setPointSize(10);
+  QFontMetrics fm(font);
+  painter.setFont(font);
+
+  double dy = (_plot->maxY()-_plot->minY())/8, v = _plot->maxY()-dy;
+  for (size_t i=1; i<8; i++, v-=dy) {
+    int y = (i*height)/8;
+    QString label = QString::number(v, 'g', 3);
+    QRectF bb = fm.boundingRect(label);
+    float shift = bb.height()/2 - fm.ascent();
+    painter.drawText(3, y-shift, label);
+    painter.drawText(width-bb.width()-3, y-shift, label);
+  }
+
+  double dh = double(_plot->maxT())/8, h = dh;
+  for (size_t i=1; i<8; i++, h+=dh) {
+    int x = (i*width)/8;
+
+    QString unit = "ms";
+    QString label = QString("%1 %2");
+    if (h > 1e3) { label = label.arg(QString::number(h/1000, 'g', 3), "s"); }
+    else { label = label.arg(QString::number(h, 'g', 3), "ms"); }
+
+    QRectF bb = fm.boundingRect(label);
+    painter.drawText(x-bb.width()/2, height-3-fm.underlinePos(), label);
+    painter.drawText(x-bb.width()/2, 3+bb.height(), label);
+
+  }
 }

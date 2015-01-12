@@ -1,9 +1,11 @@
 #include "application.hh"
+#include <iostream>
 
 Application::Application(int argc, char *argv[])
   : QApplication(argc, argv), _delimiter(";"), _source(), _plot(0)
 {
   _plot = new Plot();
+  QObject::connect(&_source, SIGNAL(readyRead()), this, SLOT(onDataReceived()));
 }
 
 int
@@ -21,6 +23,9 @@ Application::openPort(int idx) {
   _source.close();
   _source.setPort(QSerialPortInfo::availablePorts().at(idx));
   _source.open(QIODevice::ReadOnly);
+  if (!_source.isOpen() || !_source.isReadable()) {
+    std::cerr << "Can not open device..." << std::endl;
+  }
 }
 
 QSerialPort::BaudRate
@@ -56,6 +61,11 @@ Application::setStopBits(QSerialPort::StopBits bits) {
 Plot *
 Application::plot() const {
   return _plot;
+}
+
+void
+Application::resetPlot() {
+  _plot->reset();
 }
 
 const QString &
