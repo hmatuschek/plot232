@@ -16,5 +16,7 @@ COPY "%QT_BIN_PATH%/icudt52.dll" .
 COPY "%QT_BIN_PATH%/libwinpthread-1.dll" .
 COPY "%LIB_PATH%/libgcc_s_dw2-1.dll" .
 COPY "%LIB_PATH%/libstdc++-6.dll" .
+MKDIR platforms
+COPY "%QT_PLUGIN_PATH%/platforms/qwindows.dll" platforms
 
 makensis plot232.nsi

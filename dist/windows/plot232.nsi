@@ -5,8 +5,8 @@ OutFile "plot232-0.1.exe"
 !define APPNAME "Plot232"
 !define DESCRIPTION "A plots data received via a serial port."
 # These three must be integers
-!define VERSIONMAJOR 0
-!define VERSIONMINOR 1
+!define VERSIONMAJOR 1
+!define VERSIONMINOR 0
 !define VERSIONBUILD 0
 
 RequestExecutionLevel admin ;Require admin rights on NT6+ (When UAC is turned on)
@@ -14,7 +14,7 @@ RequestExecutionLevel admin ;Require admin rights on NT6+ (When UAC is turned on
 InstallDir "$PROGRAMFILES\${APPNAME}"
 
 Name "${APPNAME}"
-outFile "plot232-0.1-setup.exe"
+outFile "plot232-1.0-setup.exe"
 
 !include LogicLib.nsh
  
@@ -43,6 +43,8 @@ section "install"
 	# Files added here should be removed by the uninstaller (see section "uninstall")
 	file "plot232.exe"
         file "*.dll"
+        file /r "platforms"
+
 	# Add any other files for the install directory (license files, app data, etc) here
  
 	# Uninstaller - See function un.onInit and section "uninstall" for configuration
