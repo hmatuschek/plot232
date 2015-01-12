@@ -5,7 +5,7 @@ SOURCES = src/main.cc src/plot.cc src/plotview.cc src/application.cc \
     src/ctrlview.cc \
     src/mainwindow.cc
 
-CONFIG += qt debug
+CONFIG += qt debug windows
 TARGET = plot232
 
 QT += gui widgets serialport
