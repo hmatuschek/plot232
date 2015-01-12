@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QImage>
+#include <inttypes.h>
 
 
 PlotView::PlotView(Plot *plot, QWidget *parent) :
